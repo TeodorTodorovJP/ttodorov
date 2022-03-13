@@ -1,13 +1,11 @@
 import bcrypt from 'bcrypt';
-import { dbTableVolumes } from '../common/dbTableVolumes.js';
 import errorStrings from '../common/error-strings.js';
 import { userRole } from '../common/user-role.js';
-import { searchPlayList } from '../common/searchPlayList.js';
-
+import createToken from '../auth/create-token.js';
 
 const createUser = (usersData) => {
-  return async (username, password) => {
-    const existingUser = await usersData.getBy('username', username);
+  return async (inputUserData) => {
+    const existingUser = await usersData.getUserBy('unique_user_name', inputUserData.uniqueUserName);
 
     if (existingUser) {
       if (existingUser.error) {
@@ -22,8 +20,25 @@ const createUser = (usersData) => {
       };
     }
 
-    const passwordHash = await bcrypt.hash(password, 10);
-    const user = await usersData.create(username, passwordHash, userRole.user);
+    const passwordHash = await bcrypt.hash(inputUserData.password, 10);
+
+    // Needed because the stored function always requires these parameters
+    let roleToFill = '';
+    if ( userRole[inputUserData.role] ) {
+      roleToFill = inputUserData.role;
+    } else {
+      return {
+        error: errorStrings.users.notListedRole,
+        user: null,
+      };
+    }
+    const role      = await usersData.getRoleId(roleToFill);
+    const isBanned  = '0';
+    const isDeleted = '0';
+    const picture   = 'picture';
+
+    //uniqueUserName, userName, password, roleId, isBanned, isDeleted, picture
+    const user = await usersData.createUser(inputUserData.uniqueUserName, inputUserData.userName, passwordHash, role.role_id, isBanned, isDeleted, picture);
 
     if (user.message) {
       return {
@@ -40,25 +55,52 @@ const createUser = (usersData) => {
 };
 
 const signInUser = (usersData) => {
-  return async (username, password) => {
-    const user = await usersData.getWithRole(username);
+  return async (uniqueUserName, password) => {
+    const user = await usersData.getUserAndRole(uniqueUserName);
 
     if (user && user.error) {
       return {
         error: user.error,
-        user: null,
+        token: null,
       };
     }
+    if (!user) {
+      return {
+        error: errorStrings.users.invalidUserId,
+        token: null,
+      };
+    }
+
+    const userStatus = await usersData.getStatusById(user.id);
+
+    if (userStatus.error) {
+      return {
+        error: userStatus, 
+        token: null
+      };
+    } 
 
     if (!user || !(await bcrypt.compare(password, user.password))) {
       return {
         error: errorStrings.users.invalidCredentials,
-        user: null,
+        token: null,
       };
     }
+
+    const userStatusObj = userStatus[0];
+
+    const payload = {
+      sub: user.id,
+      uniqueUserName: user.uniqueUserName,
+      role: user.role,
+      isBanned: userStatusObj.is_banned,
+      isDeleted: userStatusObj.is_deleted,
+    };
+    const token = createToken(payload);
+
     return {
       error: null,
-      user: user,
+      token: token
     };
   };
 };

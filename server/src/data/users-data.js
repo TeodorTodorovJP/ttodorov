@@ -1,30 +1,27 @@
 import pool from './pool.js';
-import { searchPlayList } from '../common/searchPlayList.js';
 
-const create = async (username, password, role) => {
-  // const sql = `
-  //   INSERT INTO users(username, password, roles_id)
-  //   VALUES (?,?,(SELECT id FROM roles WHERE name = ?))
-  //   `;
+const createUser = async (uniqueUserName, userName, password, roleId, isBanned, isDeleted, picture) => {
+  // select create_user('unique_user_name', 'user_name', 'password', role_id, is_banned(0/1), is_deleted(0/1), 'picture') as result;
+  // select create_user('Teodor', 'Teodor', 'password', 9, 0, 0, 'picture') as result;
 
-  const sql =  `select create_user(?, ?, ?, ?, ?, ?);`
+  const sql =  `select create_user(?, ?, ?, ?, ?, ?, ?) as result;`
   let result = {};
 
   try {
-    result = await pool.query(sql, [username, password, role]);
+    result = await pool.query(sql, [uniqueUserName, userName, password, roleId, isBanned, isDeleted, picture]);
   } catch (error) {
-    return { message: 'Something went wrong with create user request.' };
+    return { message: 'Something went wrong with createUser user request.' };
   }
 
   return {
-    id: result.insertId,
-    username: username,
+    id: result[0].result,
+    userName: uniqueUserName,
   };
 };
 
-const getBy = async (column, value) => {
+const getUserBy = async (column, value) => {
   const sql = `
-    SELECT id, username
+    SELECT user_id as userId, unique_user_name as uniqueUserName
     FROM users
     WHERE ${column} = ?
     `;
@@ -32,25 +29,43 @@ const getBy = async (column, value) => {
   try {
     result = await pool.query(sql, [value]);
   } catch (err) {
-    return { error: 'Something went wrong with getBy request.' };
+    return { error: 'Something went wrong with getUserBy request.' };
   }
 
 
   return result[0];
 };
 
-const getWithRole = async (username) => {
+const getRoleId = async (roleName) => {
   const sql = `
-    SELECT u.id, u.username, u.password, r.name as role
-    FROM users u
-    JOIN roles r ON u.roles_Id = r.id
-    WHERE u.username = ? 
+    SELECT role_id
+    FROM users_roles
+    WHERE role_name = ?
     `;
   let result = [];
   try {
-    result = await pool.query(sql, [username]);
+    result = await pool.query(sql, [roleName]);
   } catch (err) {
-    return { error: 'Something went wrong with getWithRole request.' };
+    return { error: 'Something went wrong with getRoleId request.' };
+  }
+
+
+  return result[0];
+};
+
+const getUserAndRole = async (uniqueUserName) => {
+  const sql = `
+      SELECT u.user_id as id, u.unique_user_name as uniqueUserName, u.user_password as password, r.role_name as role
+      FROM users u
+      JOIN users_roles r ON u.role_Id = r.role_id
+      WHERE u.unique_user_name = ?
+    `;
+  let result = [];
+  
+  try {
+    result = await pool.query(sql, [uniqueUserName]);
+  } catch (err) {
+    return { error: 'Something went wrong with getUserAndRole request.' };
   }
 
   return result[0];
@@ -116,7 +131,7 @@ const getStatusById = async (userId) => {
   const sql = `
     SELECT is_banned, is_deleted
     FROM users
-    WHERE id = ?
+    WHERE user_id = ?
     `;
 
   try {
@@ -188,7 +203,6 @@ const createMyUser = async (unique_user_name, user_name, user_password, is_banne
   try {
     result = await pool.query(sql, [unique_user_name, user_name, user_password, is_banned, is_deleted, profile_pic]);
   } catch (error) {
-    console.log(error)
     return { error: 'Something went wrong with createMyUser request.' };
   }
 
@@ -217,7 +231,6 @@ const updateUser = async (user_id, unique_user_name, user_name, user_password, i
   try {
     result = await pool.query(sql, [user_id, unique_user_name, user_name, user_password, is_banned, is_deleted, profile_pic]);
   } catch (error) {
-    console.log(error)
     return { error: 'Something went wrong with createMyUser request.' };
   }
 
@@ -228,9 +241,10 @@ const updateUser = async (user_id, unique_user_name, user_name, user_password, i
 
 
 export default {
-  create,
-  getWithRole,
-  getBy,
+  createUser,
+  getUserAndRole,
+  getUserBy,
+  getRoleId,
   getUserInfo,
   logout,
   isTokenDeactivated,

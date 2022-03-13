@@ -1,14 +1,19 @@
+import errorStrings from '../common/error-strings.js';
 import usersData from '../data/users-data.js';
 
 const deleteUser = (adminsData) => {
   return async (userId) => {
-    const user = await usersData.getBy('id', userId);
+    const user = await usersData.getUserBy('user_id', userId);
 
     if (user === undefined) {
       return { message: 'The user you want to delete does not exist.' };
     }
 
-    const userInfo = await usersData.getWithRole(user.username);
+    if (user.error) {
+      return { error: user.error };
+    }
+
+    const userInfo = await adminsData.getUserWithRole(user.uniqueUserName);
 
     if (userInfo && userInfo.error) {
       return userInfo;
@@ -24,7 +29,7 @@ const deleteUser = (adminsData) => {
       return deleteUserErr;
     }
 
-    return { message: `The user with username ${user.username} has been deleted.` };
+    return { message: `The user with username ${user.uniqueUserName} has been deleted.` };
   };
 };
 
@@ -33,13 +38,13 @@ const banUser = (adminsData) => {
     if (isNaN(days)) {
       return { error: 'You have to specify numbers as days to be banned.' };
     }
-    const user = await usersData.getBy('id', userId);
+    const user = await usersData.getUserBy('id', userId);
 
     if (user === undefined) {
       return { message: 'The user you want to ban does not exist.' };
     }
 
-    const userInfo = await usersData.getWithRole(user.username);
+    const userInfo = await usersData.getUserAndRole(user.username);
 
     if (userInfo && userInfo.error) {
       return userInfo;
@@ -77,7 +82,7 @@ const banLifter = (adminsData) => {
       return { message: 'The user you want to unban is not banned.' };
     }
 
-    const userInfo = await usersData.getBy('id', id);
+    const userInfo = await usersData.getUserBy('id', id);
 
     if (userInfo && userInfo.error) {
       return { userInfo };
@@ -102,7 +107,7 @@ const getUser = (adminsData) => {
       return { user };
     }
     if (!user) {
-      return { message: 'The user you want to find does not exist.' };
+      return { message: errorStrings.users.invalidUserId };
     }
 
     return {user: user};

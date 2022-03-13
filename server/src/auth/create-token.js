@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 const createToken = (payload) => {
   const token = jwt.sign(
       payload,
-      'privateKey'
+      'fg656fsfgwfc3324'
   );
 
   return token;

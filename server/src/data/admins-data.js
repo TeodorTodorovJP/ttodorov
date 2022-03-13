@@ -5,7 +5,7 @@ const deleteUser = async (userId) => {
   const sql = `
     UPDATE users
     SET is_deleted = 1 
-    WHERE (id = ?);
+    WHERE (user_id = ?);
     `;
   try {
     await pool.query(sql, [userId]);
@@ -42,16 +42,16 @@ const liftBan = async (userId) => {
 
 const getUserWithRole = async (userName) => {
   const sql = `
-    SELECT u.id, u.username, u.is_banned, u.is_deleted, u.profile_pic, r.name as role
-    FROM users u
-    JOIN roles r ON u.roles_Id = r.id
-    WHERE u.username = ?
+  SELECT u.user_id as id, u.unique_user_name as uniqueUserName, r.role_name as role
+  FROM users u
+  JOIN users_roles r ON u.role_Id = r.role_id
+  WHERE u.unique_user_name = ?
     `;
   let result = [];
   try {
     result = await pool.query(sql, [userName]);
   } catch (err) {
-    return { error: 'Something went wrong with getBy request.' };
+    return { error: 'Something went wrong with getUserWithRole request.' };
   }
 
   return result[0];

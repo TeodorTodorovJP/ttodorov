@@ -10,7 +10,7 @@ export default async (req, res, next) => {
 
   const userStatus = user[0];
 
-  if (userStatus.is_banned) {
+  if (+userStatus.is_banned > 0) {
     const banDate = new Date(userStatus.is_banned);
 
     if (banDate.valueOf() > Date.now()) {

@@ -14,10 +14,14 @@ import { upload } from '../middlewares/file-uploader.js';
 const usersController = express.Router();
 
 usersController
-    .post('/', bodyValidator('users', createUserScheme), async (req, res) => {
-      const body = req.body;
+    //Test register with:
+    // { 
+    //   "uniqueUserName": "Teodor", "userName": "Teodor", "password": "myPass23*"
+    // }
+    .post('/register', bodyValidator('users', createUserScheme), async (req, res) => {
+      const inputUserData = req.body;
 
-      const { error, user } = await usersService.createUser(usersData)(body.username, body.password);
+      const { error, user } = await usersService.createUser(usersData)(inputUserData);
 
       if (error) {
         res.status(409).send({ error: error });

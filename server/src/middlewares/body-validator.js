@@ -4,6 +4,11 @@ export default (resource, validator) => (req, res, next) => {
   const errors = [];
   try {
     Object.keys(validator).forEach((key) => {
+
+      if ( !req.body[key] ) {
+        throw Error("");
+      }
+
       if (!validator[key](req.body[key])) {
         errors.push(errorStrings[resource][key]);
       }

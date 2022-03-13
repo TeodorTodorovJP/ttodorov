@@ -11,7 +11,7 @@ const options = {
 const jwtStrategy = new passportJwt.Strategy(options, async (payload, done) => {
   const user = {
     id: payload.sub,
-    username: payload.username,
+    uniqueUserName: payload.uniqueUserName,
     role: payload.role,
   };
 
