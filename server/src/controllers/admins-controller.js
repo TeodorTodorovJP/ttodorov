@@ -18,10 +18,10 @@ adminsController.use(tokenValidator);
 adminsController.use(roleMiddleware(userRole.admin));
 
 adminsController
-  .get('/user/:username', async (req, res) => {
-    const { username } = req.params;
+  .get('/user', async (req, res) => {
+    const { uniqueUserName } = req.body;
 
-    const { error, user, message } = await adminsService.getUser(adminsData)(username);
+    const { error, user, message } = await adminsService.getUser(adminsData)(uniqueUserName);
 
     if (error) {
       res.status(400).send({ error });
@@ -44,6 +44,19 @@ adminsController
     const result = await adminsService.banUser(adminsData)(id, days);
 
     res.send(result);
+  })
+  .delete('/activate/user', async (req, res) => {
+    const { uniqueUserName } = req.body;
+
+    const result = await adminsService.activateUser(adminsData)(uniqueUserName);
+
+    if (result.error) {
+      res.status(400).send(result.error);
+    } else if (result.message) {
+      res.status(404).send(result.message);
+    } else {
+      res.status(200).send(result);
+    }
   })
   .post('/liftban/:id', async (req, res) => {
     const { id } = req.params;

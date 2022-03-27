@@ -99,12 +99,12 @@ const banLifter = (adminsData) => {
 };
 
 const getUser = (adminsData) => {
-  return async (userName) => {
+  return async (uniqueUserName) => {
 
-    const user = await adminsData.getUserWithRole(userName);
+    const user = await adminsData.getUserWithRole(uniqueUserName);
 
     if (user && user.error) {
-      return { user };
+      return user;
     }
     if (!user) {
       return { message: errorStrings.users.invalidUserId };
@@ -114,9 +114,36 @@ const getUser = (adminsData) => {
   };
 };
 
+const activateUser = (adminsData) => {
+  return async (uniqueUserName) => {
+
+    const user = await adminsData.getUserData(uniqueUserName);
+    console.log(user)
+    if (user && user.error) {
+      return user;
+    }
+    if (!user) {
+      return { message: errorStrings.users.invalidUserId };
+    }
+
+    if (user.isDeleted == 0) {
+      return {message: 'The user is already active!'}
+    }
+
+    const activatedUser = await adminsData.activateUser(user.userId);
+
+    if (activatedUser && activatedUser.error) {
+      return activatedUser;
+    }
+
+    return {message: 'The user is activated again.'};
+  };
+};
+
 export default {
   deleteUser,
   banUser,
   banLifter,
-  getUser
+  getUser,
+  activateUser
 };

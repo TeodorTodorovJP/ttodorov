@@ -10,9 +10,11 @@ const options = {
 // the payload will be injected from the decoded token
 const jwtStrategy = new passportJwt.Strategy(options, async (payload, done) => {
   const user = {
-    id: payload.sub,
+    id: payload.id,
     uniqueUserName: payload.uniqueUserName,
     role: payload.role,
+    isBanned: payload.is_banned,
+    isDeleted: payload.is_deleted
   };
 
   // the user object will be injected in the request

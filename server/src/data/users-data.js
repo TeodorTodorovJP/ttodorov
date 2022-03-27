@@ -239,6 +239,20 @@ const updateUser = async (user_id, unique_user_name, user_name, user_password, i
   };
 };
 
+const resign = async (userId) => {
+  const sql = `
+    UPDATE users
+    SET is_deleted = ? 
+    WHERE (user_id = ?)
+    `;
+  try {
+    await pool.query(sql, ['1', userId]);
+  } catch (error) {
+    console.log(error)
+    return { error: 'Something went wrong with resign user request.' };
+  }
+};
+
 
 export default {
   createUser,
@@ -250,5 +264,6 @@ export default {
   isTokenDeactivated,
   updateAvatar,
   getStatusById,
-  createMyUser
+  createMyUser,
+  resign
 };

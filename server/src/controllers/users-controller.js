@@ -5,11 +5,10 @@ import usersService from '../services/users-service.js';
 import { authMiddleware } from '../auth/auth.middleware.js';
 import bodyValidator from '../middlewares/body-validator.js';
 import createUserScheme from '../validators/create-user-scheme.js';
-import createPlayListScheme from '../validators/create-playList-scheme.js';
-import updatePlayListScheme from '../validators/update-playList-scheme.js';
 import tokenValidator from '../middlewares/token-validator.js';
 import banGuard from '../middlewares/ban-guard.js';
 import { upload } from '../middlewares/file-uploader.js';
+import jwt_decode from "jwt-decode";
 
 const usersController = express.Router();
 
@@ -46,6 +45,18 @@ usersController
         res.status(404).send(result);
       } else {
         res.send({ message: 'Successfully logged out' });
+      }
+    })
+    .delete('/resign/', authMiddleware, tokenValidator, async (req, res) => {
+      const token = req.headers.authorization.replace('Bearer ', '');
+      const tokenData = jwt_decode(token);
+      const { uniqueUserName, password } = req.body;
+      const result = await usersService.resign(usersData)( tokenData, uniqueUserName, password );
+
+      if (result.error) {
+        res.status(404).send(result);
+      } else {
+        res.send(result.message);
       }
     })
     .put('/avatar', authMiddleware, tokenValidator, banGuard, upload('avatars').single('avatar'), async (req, res) => {

@@ -90,11 +90,11 @@ const signInUser = (usersData) => {
     const userStatusObj = userStatus[0];
 
     const payload = {
-      sub: user.id,
+      id: user.id,
       uniqueUserName: user.uniqueUserName,
       role: user.role,
       isBanned: userStatusObj.is_banned,
-      isDeleted: userStatusObj.is_deleted,
+      isDeleted: userStatusObj.is_deleted
     };
     const token = createToken(payload);
 
@@ -153,10 +153,73 @@ const getMyUser = (usersData) => {
   };
 };
 
+const resign = (usersData) => {
+  return async ( tokenData, uniqueUserName, password ) => {
+    if (tokenData.uniqueUserName != uniqueUserName) {
+      return {
+        error: 'You are not that user. Do not try to remove other users!',
+        message: null,
+      };
+    }
+    const user = await usersData.getUserAndRole(tokenData.uniqueUserName);
+
+    if (user && user.error) {
+      return {
+        error: user.error,
+        message: null,
+      };
+    }
+    if (!user) {
+      return {
+        error: errorStrings.users.invalidUserId,
+        message: null,
+      };
+    }
+
+    const userStatus = await usersData.getStatusById(user.id);
+
+    if (userStatus.error) {
+      return {
+        error: userStatus, 
+        message: null
+      };
+    } 
+
+    if (userStatus[0].is_deleted == 1) {
+      return {
+        error: 'Your profile is already deleted!', 
+        message: null
+      };
+    }
+
+    if (!user || !(await bcrypt.compare(password, user.password))) {
+      return {
+        error: errorStrings.users.invalidCredentials,
+        message: null,
+      };
+    }
+
+    const resignedUser = await usersData.resign(user.id);
+
+    if (resignedUser && resignedUser.error) {
+      return {
+        error: resignedUser.error,
+        message: null,
+      };
+    }
+
+    return {
+      error: null,
+      message: `User with name ${user.uniqueUserName} was deleted!`
+    };
+
+  };
+};
 
 export default {
   signInUser,
   createUser,
   getUser,
-  getMyUser
+  getMyUser,
+  resign
 };
