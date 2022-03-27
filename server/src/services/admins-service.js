@@ -35,17 +35,14 @@ const deleteUser = (adminsData) => {
 
 const banUser = (adminsData) => {
   return async (userId, days) => {
-    if (isNaN(days)) {
-      return { error: 'You have to specify numbers as days to be banned.' };
-    }
-    const user = await usersData.getUserBy('id', userId);
+    const user = await usersData.getUserBy('user_id', userId);
 
     if (user === undefined) {
       return { message: 'The user you want to ban does not exist.' };
     }
 
-    const userInfo = await usersData.getUserAndRole(user.username);
-
+    const userInfo = await adminsData.getUserData(user.uniqueUserName);
+    console.log(userInfo)
     if (userInfo && userInfo.error) {
       return userInfo;
     }
@@ -56,13 +53,13 @@ const banUser = (adminsData) => {
 
     const daysBan = new Date(Date.now() + (+days) * 24 * 3600 * 1000);
 
-    const banUserErr = await adminsData.ban(userId, daysBan);
+    const banUserErr = await adminsData.banUser(userId, daysBan);
 
     if (banUserErr) {
       return banUserErr;
     }
 
-    return { message: `The user with id ${userId} and username ${userInfo.username} has been banned until ${daysBan}.` };
+    return { message: `The user with id ${userId} and username ${userInfo.uniqueUserName} has been banned until ${daysBan}.` };
   };
 };
 
@@ -118,7 +115,6 @@ const activateUser = (adminsData) => {
   return async (uniqueUserName) => {
 
     const user = await adminsData.getUserData(uniqueUserName);
-    console.log(user)
     if (user && user.error) {
       return user;
     }

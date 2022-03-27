@@ -81,8 +81,8 @@ usersController
       }
     })
 
-    .get('/:id', async (req, res) => {
-      const { id } = req.params;
+    .get('/user', async (req, res) => {
+      const { id } = req.body;
 
       const { error, user } = await usersService.getUser(usersData)(id);
 

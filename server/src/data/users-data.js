@@ -248,7 +248,6 @@ const resign = async (userId) => {
   try {
     await pool.query(sql, ['1', userId]);
   } catch (error) {
-    console.log(error)
     return { error: 'Something went wrong with resign user request.' };
   }
 };

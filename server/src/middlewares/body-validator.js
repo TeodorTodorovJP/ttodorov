@@ -1,6 +1,6 @@
 import errorStrings from '../common/error-strings.js';
 
-export default (resource, validator) => (req, res, next) => {
+export default (resource, validator, urlId) => (req, res, next) => {
   const errors = [];
   try {
     Object.keys(validator).forEach((key) => {
@@ -20,6 +20,6 @@ export default (resource, validator) => (req, res, next) => {
       return res.status(400).send({ error: errors });
     }
   } catch (err) {
-    res.status(400).send({ error: 'Seems like you are trying to pass invalid data.' });
+    res.status(400).send({ error: 'Seems like you are trying to pass invalid data.', example: errorStrings.expectedBody[resource][urlId] });
   }
 };

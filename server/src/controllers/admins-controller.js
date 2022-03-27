@@ -9,6 +9,7 @@ import usersService from '../services/users-service.js';
 import bodyValidator from '../middlewares/body-validator.js';
 import updatePlayListScheme from '../validators/update-playList-scheme.js';
 import banGuard from '../middlewares/ban-guard.js';
+import banUserScheme from '../validators/ban-user-scheme.js';
 
 const adminsController = express.Router();
 
@@ -31,15 +32,15 @@ adminsController
       res.status(200).send(user);
     }
   })
-  .delete('/user/:id', async (req, res) => {
-    const { id } = req.params;
+  .delete('/user', async (req, res) => {
+    const { id } = req.body;
 
     const result = await adminsService.deleteUser(adminsData)(id);
 
     res.send(result);
   })
-  .post('/:id/ban/:days', async (req, res) => {
-    const { id, days } = req.params;
+  .post('/ban', bodyValidator('admins', banUserScheme, 'ban'), async (req, res) => {
+    const { id, days } = req.body;
 
     const result = await adminsService.banUser(adminsData)(id, days);
 
@@ -58,8 +59,8 @@ adminsController
       res.status(200).send(result);
     }
   })
-  .post('/liftban/:id', async (req, res) => {
-    const { id } = req.params;
+  .post('/liftban', async (req, res) => {
+    const { id } = req.body;
 
     const result = await adminsService.banLifter(adminsData)(id);
 

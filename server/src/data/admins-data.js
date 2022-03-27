@@ -27,16 +27,16 @@ const activateUser = async (userId) => {
   }
 };
 
-const ban = async (userId, days) => {
+const banUser = async (userId, days) => {
   const sql = `
     UPDATE users
     SET is_banned = ? 
-    WHERE (id = ?)
+    WHERE (user_id = ?)
     `;
   try {
     await pool.query(sql, [days, userId]);
   } catch (error) {
-    return { message: 'Something went wrong with ban user request.' };
+    return { message: 'Something went wrong with banUser request.' };
   }
 };
 
@@ -81,7 +81,6 @@ const getUserData = async (uniqueUserName) => {
   try {
     result = await pool.query(sql, [uniqueUserName]);
   } catch (err) {
-    console.log(err)
     return { error: 'Something went wrong with getUserData request.' };
   }
 
@@ -91,7 +90,7 @@ const getUserData = async (uniqueUserName) => {
 export default {
   deleteUser,
   activateUser,
-  ban,
+  banUser,
   liftBan,
   getUserWithRole,
   getUserData

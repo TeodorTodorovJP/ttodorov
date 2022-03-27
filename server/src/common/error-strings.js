@@ -11,5 +11,17 @@ export default {
   signin: {
     uniqueUserName: 'Expected title: string between 3 and 255 characters.',
     password: 'Expected password: between 7 to 15 characters which contain at least one numeric digit and a special character'
+  },
+  admins: {
+    id: 'Expected id: number greater than 0.',
+    days: 'Expected days: number greater than -1.'
+  },
+  expectedBody: {
+    admins: {
+      ban: {
+        "id": "1", 
+        "days": "1"
+      }
+    }
   }
 };
