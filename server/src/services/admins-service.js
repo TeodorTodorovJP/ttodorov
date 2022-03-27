@@ -63,38 +63,6 @@ const banUser = (adminsData) => {
   };
 };
 
-const banLifter = (adminsData) => {
-  return async (id) => {
-    const user = await usersData.getStatusById(id);
-
-    if (user.error) {
-      return user;
-    }
-
-    if (!user[0]) {
-      return { message: 'The user you want to unban does not exist.' };
-    }
-
-    if (user[0].is_banned === null ) {
-      return { message: 'The user you want to unban is not banned.' };
-    }
-
-    const userInfo = await usersData.getUserBy('id', id);
-
-    if (userInfo && userInfo.error) {
-      return { userInfo };
-    }
-
-    const liftBanErr = await adminsData.liftBan(id);
-
-    if (liftBanErr) {
-      return liftBanErr;
-    }
-
-    return { message: `User with id ${id} and username ${userInfo.username} has been unbanned` };
-  };
-};
-
 const getUser = (adminsData) => {
   return async (uniqueUserName) => {
 
@@ -139,7 +107,6 @@ const activateUser = (adminsData) => {
 export default {
   deleteUser,
   banUser,
-  banLifter,
   getUser,
   activateUser
 };

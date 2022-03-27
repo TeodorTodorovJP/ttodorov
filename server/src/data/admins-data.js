@@ -40,19 +40,6 @@ const banUser = async (userId, days) => {
   }
 };
 
-const liftBan = async (userId) => {
-  const sql = `
-    UPDATE users
-    SET is_banned = NULL
-    WHERE (id = ?)
-    `;
-  try {
-    await pool.query(sql, [userId]);
-  } catch (error) {
-    return { message: 'Something went wrong with lift ban request.' };
-  }
-};
-
 const getUserWithRole = async (uniqueUserName) => {
   const sql = `
   SELECT u.user_id as id, u.unique_user_name as uniqueUserName, r.role_name as role
@@ -87,11 +74,43 @@ const getUserData = async (uniqueUserName) => {
   return result[0];
 };
 
+const getPagesPermissionsById = async (userId) => {
+  const sql = `
+  SELECT *
+  FROM allowed_pages
+  WHERE user_id = ?
+    `;
+  let result = [];
+  try {
+    result = await pool.query(sql, [userId]);
+  } catch (err) {
+    return { error: 'Something went wrong with getPagePermissionsById request.' };
+  }
+  
+  return result[0];
+};
+
+const getPagePermissionsByPage = async (pageName, userId) => {
+  let sql = '';
+  if (pageName == 'email')  sql  = `SELECT * FROM page_permissions_email WHERE user_id = ?`;
+  if (pageName == 'todo')   sql  = `SELECT * FROM page_permissions_todo WHERE user_id = ?`;
+
+  let result = [];
+  try {
+    result = await pool.query(sql, [userId]);
+  } catch (err) {
+    return { error: 'Something went wrong with getPagePermissionsByPage request.' };
+  }
+
+  return result[0];
+};
+
 export default {
   deleteUser,
   activateUser,
   banUser,
-  liftBan,
   getUserWithRole,
-  getUserData
+  getUserData,
+  getPagesPermissionsById,
+  getPagePermissionsByPage
 };

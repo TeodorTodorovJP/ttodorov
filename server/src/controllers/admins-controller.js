@@ -2,14 +2,12 @@ import express from 'express';
 import { authMiddleware, roleMiddleware } from '../auth/auth.middleware.js';
 import { userRole } from '../common/user-role.js';
 import adminsData from '../data/admins-data.js';
-import usersData from '../data/users-data.js';
 import tokenValidator from '../middlewares/token-validator.js';
 import adminsService from '../services/admins-service.js';
-import usersService from '../services/users-service.js';
 import bodyValidator from '../middlewares/body-validator.js';
-import updatePlayListScheme from '../validators/update-playList-scheme.js';
 import banGuard from '../middlewares/ban-guard.js';
 import banUserScheme from '../validators/ban-user-scheme.js';
+import pagePermissionsDecorator from '../middlewares/page-permissions-decorator.js';
 
 const adminsController = express.Router();
 
@@ -17,13 +15,12 @@ adminsController.use(authMiddleware);
 adminsController.use(banGuard);
 adminsController.use(tokenValidator);
 adminsController.use(roleMiddleware(userRole.admin));
+adminsController.use(pagePermissionsDecorator);
 
 adminsController
   .get('/user', async (req, res) => {
-    const { uniqueUserName } = req.body;
-
+    const { uniqueUserName, permissions } = req.body;
     const { error, user, message } = await adminsService.getUser(adminsData)(uniqueUserName);
-
     if (error) {
       res.status(400).send({ error });
     } else if (message) {
@@ -59,14 +56,6 @@ adminsController
       res.status(200).send(result);
     }
   })
-  .post('/liftban', async (req, res) => {
-    const { id } = req.body;
-
-    const result = await adminsService.banLifter(adminsData)(id);
-
-    res.send(result);
-  });
-
 
 
 export default adminsController;

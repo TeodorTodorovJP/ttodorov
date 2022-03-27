@@ -55,7 +55,7 @@ const getRoleId = async (roleName) => {
 
 const getUserAndRole = async (uniqueUserName) => {
   const sql = `
-      SELECT u.user_id as id, u.unique_user_name as uniqueUserName, u.user_password as password, r.role_name as role
+      SELECT u.user_id as id, u.unique_user_name as uniqueUserName, u.user_password as password, u.is_deleted as isDeleted, r.role_name as role
       FROM users u
       JOIN users_roles r ON u.role_Id = r.role_id
       WHERE u.unique_user_name = ?

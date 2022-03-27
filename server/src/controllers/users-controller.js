@@ -11,6 +11,7 @@ import { upload } from '../middlewares/file-uploader.js';
 import jwt_decode from "jwt-decode";
 
 const usersController = express.Router();
+//usersController.use(permissionsDecorator);
 
 usersController
     //Test register with:

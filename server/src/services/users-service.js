@@ -64,7 +64,7 @@ const signInUser = (usersData) => {
         token: null,
       };
     }
-    if (!user) {
+    if (!user || user.isDeleted == '1') {
       return {
         error: errorStrings.users.invalidUserId,
         token: null,
