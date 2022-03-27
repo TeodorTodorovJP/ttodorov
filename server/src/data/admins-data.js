@@ -90,20 +90,73 @@ const getPagesPermissionsById = async (userId) => {
   return result[0];
 };
 
-const getPagePermissionsByPage = async (pageName, userId) => {
-  let sql = '';
-  if (pageName == 'email')  sql  = `SELECT * FROM page_permissions_email WHERE user_id = ?`;
-  if (pageName == 'todo')   sql  = `SELECT * FROM page_permissions_todo WHERE user_id = ?`;
+const getPagePermissionsByPageById = async (pageName, userId) => {
+  let preSql  = 'SELECT * FROM page_permissions_';
+  let postSql = ' WHERE user_id = ?';
+  let sql = preSql + pageName + postSql;
 
   let result = [];
   try {
     result = await pool.query(sql, [userId]);
+  } catch (err) {
+    return { error: 'Something went wrong with getPagePermissionsByPageById request.' };
+  }
+
+  return result[0];
+};
+
+const getPagePermissionsByPage = async (pageName) => {
+  let sql  = 'SELECT * FROM page_permissions_' + pageName;
+
+  let result = [];
+  try {
+    result = await pool.query(sql);
   } catch (err) {
     return { error: 'Something went wrong with getPagePermissionsByPage request.' };
   }
 
   return result[0];
 };
+
+const addPermissionsForPage = async (pageName, permissionsString) => {
+  let sql = "CALL add_permissions_for_page(?, ?);";
+
+  let result = [];
+  try {
+    result = await pool.query(sql, [pageName, permissionsString]);
+  } catch (err) {
+    return { error: 'Something went wrong with addPermissionsForPage request.' };
+  }
+  return result[0];
+};
+
+const addNewPermissionsForPage = async (pageName, permissionsString) => {
+  let sql = "CALL add_new_permissions_for_page(?, ?);";
+
+  let result = [];
+  try {
+    result = await pool.query(sql, [pageName, permissionsString]);
+  } catch (err) {
+    return { error: 'Something went wrong with addNewPermissionsForPage request.' };
+  }
+  return result[0];
+};
+
+const getAllPages = async () => {
+  let sql = "SELECT * FROM allowed_pages limit 1";
+
+  let result = [];
+  try {
+    result = await pool.query(sql);
+  } catch (err) {
+    return { error: 'Something went wrong with getAllPages request.' };
+  }
+  return result[0];
+};
+
+// CALL add_permissions_for_page('admin_panel', 'view,add_user,get_user,delete_user,ban_user,activate_user,view_pages'); -- add permissions 1 or more -- DONE
+// CALL add_new_permissions_for_page('todo', 'test5,test6'); -- add new permissions 1 or more -- DONE
+// CALL update_permissions_for_page_for_users('admin_panel', '*', '', 1, 'view,add_user,get_user,delete_user,ban_user,activate_user,view_pages', '1,1,1,1,1,1,1'); -- Update DONE
 
 export default {
   deleteUser,
@@ -112,5 +165,9 @@ export default {
   getUserWithRole,
   getUserData,
   getPagesPermissionsById,
+  getPagePermissionsByPageById,
+  addPermissionsForPage,
+  addNewPermissionsForPage,
+  getAllPages,
   getPagePermissionsByPage
 };

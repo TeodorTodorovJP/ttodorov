@@ -104,9 +104,50 @@ const activateUser = (adminsData) => {
   };
 };
 
+const addPermissionsForPage = (adminsData) => {
+  return async (pageName, permissions) => {
+
+    const allPages = await adminsData.getAllPages();
+    let page = '';
+
+    const allPagesArr = Object.keys(allPages).filter(page => page != 'user_id');
+
+    if (allPagesArr.includes(pageName)) {
+      let oldPagePermissionsObj = await adminsData.getPagePermissionsByPage(pageName);
+
+      let oldPagePermissionsObjArr = Object.keys(oldPagePermissionsObj);
+      const newPermissions = permissions.filter(permission => {
+        if (!oldPagePermissionsObjArr.includes(permission)) {
+          return permission;
+        }
+      })
+      if (newPermissions.length > 0) {
+        let permissionsString = newPermissions.join(',');
+        console.log(permissionsString)
+        page = await adminsData.addNewPermissionsForPage(pageName, permissionsString);
+      }
+    } else {
+      let permissionsString = permissions.join(',');
+      console.log(permissionsString)
+      page = await adminsData.addPermissionsForPage(pageName, permissionsString);
+    }
+
+
+    if (page && page.error) {
+      return user;
+    }
+    if (!page) {
+      return { message: errorStrings.users.invalidUserId };
+    }
+
+    return {message: `Page permissions for ${pageName} have been added.`};
+  };
+};
+
 export default {
   deleteUser,
   banUser,
   getUser,
-  activateUser
+  activateUser,
+  addPermissionsForPage
 };

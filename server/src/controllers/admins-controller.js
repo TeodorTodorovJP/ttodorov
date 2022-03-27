@@ -15,11 +15,11 @@ adminsController.use(authMiddleware);
 adminsController.use(banGuard);
 adminsController.use(tokenValidator);
 adminsController.use(roleMiddleware(userRole.admin));
-adminsController.use(pagePermissionsDecorator);
+// adminsController.use(pagePermissionsDecorator);
 
 adminsController
   .get('/user', async (req, res) => {
-    const { uniqueUserName, permissions } = req.body;
+    const { uniqueUserName } = req.body;
     const { error, user, message } = await adminsService.getUser(adminsData)(uniqueUserName);
     if (error) {
       res.status(400).send({ error });
@@ -57,5 +57,23 @@ adminsController
     }
   })
 
+  .post('/pages/add', async (req, res) => {
+    // {
+    //   "pageName": "utils", // has to be snake case
+    //   "permissions": ""
+    // }
+    const { pageName, permissions } = req.body;
+
+    const result = await adminsService.addPermissionsForPage(adminsData)(pageName, permissions);
+
+    if (result.error) {
+      res.status(400).send(result.error);
+    } else if (result.message) {
+      res.status(404).send(result.message);
+    } else {
+      res.status(200).send(result);
+    }
+  })
+  
 
 export default adminsController;

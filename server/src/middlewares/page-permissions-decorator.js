@@ -19,7 +19,7 @@ export default async (req, res, next) => {
 
     const permissionsForEachPage = [];
     await Promise.all(allowedPages.map(async (pageName) => {
-        const pagePermissions = await adminsData.getPagePermissionsByPage(pageName, req.user.id);
+        const pagePermissions = await adminsData.getPagePermissionsByPageById(pageName, req.user.id);
 
         if (pagePermissions && pagePermissions.error) {
             return res.status(404).send(pagePermissions.error);
