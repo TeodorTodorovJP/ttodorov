@@ -42,7 +42,6 @@ const banUser = (adminsData) => {
     }
 
     const userInfo = await adminsData.getUserData(user.uniqueUserName);
-    console.log(userInfo)
     if (userInfo && userInfo.error) {
       return userInfo;
     }
@@ -113,7 +112,7 @@ const addPermissionsForPage = (adminsData) => {
     const allPagesArr = Object.keys(allPages).filter(page => page != 'user_id');
 
     if (allPagesArr.includes(pageName)) {
-      let oldPagePermissionsObj = await adminsData.getPagePermissionsByPage(pageName);
+      let oldPagePermissionsObj = await adminsData.getPagePermissionsForOnePage(pageName);
 
       let oldPagePermissionsObjArr = Object.keys(oldPagePermissionsObj);
       const newPermissions = permissions.filter(permission => {
@@ -123,12 +122,10 @@ const addPermissionsForPage = (adminsData) => {
       })
       if (newPermissions.length > 0) {
         let permissionsString = newPermissions.join(',');
-        console.log(permissionsString)
         page = await adminsData.addNewPermissionsForPage(pageName, permissionsString);
       }
     } else {
       let permissionsString = permissions.join(',');
-      console.log(permissionsString)
       page = await adminsData.addPermissionsForPage(pageName, permissionsString);
     }
 
@@ -144,10 +141,61 @@ const addPermissionsForPage = (adminsData) => {
   };
 };
 
+const updatePermissionsForPageForUsers = (adminsData) => {
+  return async (pageName, rolesIds, userIds, mainPagePermission, permissionColumns, permissionValues) => {
+    // Update the permissions for any number of users for single page
+    // users can be '*' for all users
+    // 'id' for single user
+    // 'id,id,id' for multiple users
+    // can pass roles_ids that will be added to the user_ids
+		// roles_ids can be *, single id and multiple ids
+    // The number of columns and number of values have to match
+
+    const allPages = await adminsData.getAllPages();
+
+    const allPagesArr = Object.keys(allPages).filter(page => page != 'user_id');
+
+    if (!allPagesArr.includes(pageName)) {
+      return {error: `Page ${pageName} does not exist.`};
+    }
+
+    // validate if you have the rights to change the permissions
+
+    // Validate roles ids
+    const allUsersIds = await adminsData.getAllRolesIds();
+    const allUsersIdsArr = Object.keys(allUsersIds).filter(page => page != 'user_id');
+
+    if (!allUsersIds.includes(pageName)) {
+      return {error: `Page ${pageName} does not exist.`};
+    }
+
+    // Validate users ids
+    // Validate permissionColumns
+    // Validate values for permissionColumns
+
+    const rolesIdsString          = rolesIds.join(',');
+    const userIdsString           = userIds.join(',');
+    const permissionColumnsString = permissionColumns.join(',');
+    const permissionValuesString  = permissionValues.join(',');
+
+    const updated = await adminsData.updatePermissionsForPageForUsers(pageName, rolesIdsString, userIdsString, mainPagePermission, permissionColumnsString, permissionValuesString);
+
+    if (updated && updated.error) {
+      return user;
+    }
+    if (!updated) {
+      return { message: errorStrings.users.invalidUserId };
+    }
+
+    return {message: `Page permissions for ${pageName} have been added.`};
+  };
+};
+
 export default {
   deleteUser,
   banUser,
   getUser,
   activateUser,
-  addPermissionsForPage
+  addPermissionsForPage,
+  updatePermissionsForPageForUsers
 };

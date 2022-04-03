@@ -105,14 +105,14 @@ const getPagePermissionsByPageById = async (pageName, userId) => {
   return result[0];
 };
 
-const getPagePermissionsByPage = async (pageName) => {
+const getPagePermissionsForOnePage = async (pageName) => {
   let sql  = 'SELECT * FROM page_permissions_' + pageName;
 
   let result = [];
   try {
     result = await pool.query(sql);
   } catch (err) {
-    return { error: 'Something went wrong with getPagePermissionsByPage request.' };
+    return { error: 'Something went wrong with getPagePermissionsForOnePage request.' };
   }
 
   return result[0];
@@ -154,6 +154,42 @@ const getAllPages = async () => {
   return result[0];
 };
 
+const updatePermissionsForPageForUsers = async (pageName, rolesIds, userIds, mainPagePermission, permissionColumns, permissionValues) => {
+  let sql = "CALL update_permissions_for_page_for_users(?, ?, ?, ?, ?, ?);";
+
+  let result = [];
+  try {
+    result = await pool.query(sql, [pageName, rolesIds, userIds, mainPagePermission, permissionColumns, permissionValues]);
+  } catch (err) {
+    return { error: 'Something went wrong with getAllPages request.' };
+  }
+  return result[0];
+};
+
+const getAllRolesIds = async () => {
+  let sql = "SELECT role_id FROM users_roles;";
+
+  let result = [];
+  try {
+    result = await pool.query(sql);
+  } catch (err) {
+    return { error: 'Something went wrong with getAllRolesIds request.' };
+  }
+  return result[0];
+};
+
+const getAllUsersIds = async () => {
+  let sql = "SELECT user_id FROM users where user_id not in ('1', '2');";
+
+  let result = [];
+  try {
+    result = await pool.query(sql);
+  } catch (err) {
+    return { error: 'Something went wrong with getAllPages request.' };
+  }
+  return result[0];
+};
+
 // CALL add_permissions_for_page('admin_panel', 'view,add_user,get_user,delete_user,ban_user,activate_user,view_pages'); -- add permissions 1 or more -- DONE
 // CALL add_new_permissions_for_page('todo', 'test5,test6'); -- add new permissions 1 or more -- DONE
 // CALL update_permissions_for_page_for_users('admin_panel', '*', '', 1, 'view,add_user,get_user,delete_user,ban_user,activate_user,view_pages', '1,1,1,1,1,1,1'); -- Update DONE
@@ -169,5 +205,8 @@ export default {
   addPermissionsForPage,
   addNewPermissionsForPage,
   getAllPages,
-  getPagePermissionsByPage
+  getPagePermissionsForOnePage,
+  updatePermissionsForPageForUsers,
+  getAllRolesIds,
+  getAllUsersIds
 };

@@ -57,7 +57,7 @@ adminsController
     }
   })
 
-  .post('/pages/add', async (req, res) => {
+  .post('/page/permissions/add', async (req, res) => {
     // {
     //   "pageName": "utils", // has to be snake case
     //   "permissions": ""
@@ -65,6 +65,42 @@ adminsController
     const { pageName, permissions } = req.body;
 
     const result = await adminsService.addPermissionsForPage(adminsData)(pageName, permissions);
+
+    if (result.error) {
+      res.status(400).send(result.error);
+    } else if (result.message) {
+      res.status(404).send(result.message);
+    } else {
+      res.status(200).send(result);
+    }
+  })
+
+  .get('/page/permissions', async (req, res) => {
+    // {
+    //   "pageName": "utils", // has to be snake case
+    //   "permissions": ""
+    // }
+    const { pageName, updatePermissions, permissions } = req.body;
+
+    const result = await adminsService.updatePermissionsForPageForUsers(adminsData)(pageName, updatePermissions, permissions); 
+
+    if (result.error) {
+      res.status(400).send(result.error);
+    } else if (result.message) {
+      res.status(404).send(result.message);
+    } else {
+      res.status(200).send(result);
+    }
+  })
+
+  .post('/page/permissions/update', async (req, res) => {
+    // {
+    //   "pageName": "utils", // has to be snake case
+    //   "permissions": ""
+    // }
+    const { pageName, updatePermissions, permissions } = req.body;
+
+    const result = await adminsService.updatePermissionsForPageForUsers(adminsData)(pageName, updatePermissions, permissions); 
 
     if (result.error) {
       res.status(400).send(result.error);
