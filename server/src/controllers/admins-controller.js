@@ -18,8 +18,8 @@ adminsController.use(roleMiddleware(userRole.admin));
 // adminsController.use(pagePermissionsDecorator);
 
 adminsController
-  .get('/user', async (req, res) => {
-    const { uniqueUserName } = req.body;
+  .get('/user/:uniqueUserName', async (req, res) => {
+    const { uniqueUserName } = req.params;
     const { error, user, message } = await adminsService.getUser(adminsData)(uniqueUserName);
     if (error) {
       res.status(400).send({ error });

@@ -10,53 +10,58 @@ import jwtStrategy from './auth/strategy.js';
 import passport from 'passport';
 import adminsController from './controllers/admins-controller.js';
 const PORT = process.env.PORT || serverPORT;
+import path from 'path';
+import cluster from 'cluster';
 
-const app = express();
+import os from 'os';
+const numCPUs = os.cpus().length;
 
-app.use(cors());
-app.use(helmet());
-app.use(express.json());
+const isDev = process.env.NODE_ENV !== 'production';
 
-app.use('/users', usersController);
-app.use('/admins', adminsController);
 
-app.use('/app', express.static('public/avatars'));
+// Multi-process to utilize all CPU cores.
+if (!isDev && cluster.isMaster) {
+  console.error(`Node cluster master ${process.pid} is running`);
 
-passport.use(jwtStrategy);
-app.use(passport.initialize());
-app.use('/auth', authController);
+  // Fork workers.
+  for (let i = 0; i < numCPUs; i++) {
+    cluster.fork();
+  }
 
-// app.get('/', async (req, res) => {
-//   res.send({ message: 'We did it.' });
-// })
+  cluster.on('exit', (worker, code, signal) => {
+    console.error(`Node cluster worker ${worker.process.pid} exited: code ${code}, signal ${signal}`);
+  });
 
-//     .get('/db', async (req, res) => {
-//       try {
-//         const result = await pool.query('SELECT * FROM genres');
-//         res.send(result);
-//       } catch (err) {
-//         console.error(err);
-//         res.send('Error ' + err);
-//       }
-//     })
+} else {
+  const app = express();
+  app.use(cors());
+  app.use(helmet());
+  app.use(express.json());
 
-//     .get('/bing', async (req, res) => {
-//       try {
-//         const result = await bing();
+  // Priority serve any static files.
+  app.use(express.static(path.resolve('../client/build')));
 
-//         console.log(result);
+  // Answer API requests.
+  // app.get('/api', function (req, res) {
+  //   res.set('Content-Type', 'application/json');
+  //   res.send('{"message":"Hello from Teodor!"}');
+  // });
 
-//         res.send({ result: result.travelDistance });
-//       } catch (err) {
-//         console.error(err);
+  app.use('/users', usersController);
+  app.use('/admins', adminsController);
 
-//         res.send('Error ' + err);
-//       }
-//     });
+  app.use('/app', express.static('public/avatars'));
 
-app.all('*', (req, res) =>
-  res.status(404).send({ message: 'Resource not found!' })
-);
+  passport.use(jwtStrategy);
+  app.use(passport.initialize());
+  app.use('/auth', authController);
 
-app.listen(PORT, () => console.log(`App is listening on port ${PORT}...`));
+  // All remaining requests return the React app, so it can handle routing.
+  app.get('*', function(request, response) {
+    response.sendFile(path.resolve('../client/build', 'index.html'));
+  });
 
+  app.listen(PORT, function () {
+    console.error(`Node ${isDev ? 'dev server' : 'cluster worker '+process.pid}: listening on port ${PORT}`);
+  });
+}

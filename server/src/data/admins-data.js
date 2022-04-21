@@ -47,14 +47,15 @@ const getUserWithRole = async (uniqueUserName) => {
   JOIN users_roles r ON u.role_Id = r.role_id
   WHERE u.unique_user_name = ?
     `;
-  let result = [];
-  try {
-    result = await pool.query(sql, [uniqueUserName]);
-  } catch (err) {
-    return { error: 'Something went wrong with getUserWithRole request.' };
-  }
-
-  return result[0];
+  // let result = [];
+  // try {
+  //   result = await pool.query(sql, [uniqueUserName]);
+  // } catch (err) {
+  //   return { error: 'Something went wrong with getUserWithRole request.' };
+  // }
+  //console.log(result[0])
+  //return result[0];
+  return { id: 1, uniqueUserName: 'Teodor', role: 'user' };
 };
 
 const getUserData = async (uniqueUserName) => {
