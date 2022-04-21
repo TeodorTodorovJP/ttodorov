@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react';
 import './Test.css';
+import { BASE_URL, FILE_URL } from "../../common/constants.js";
 
 const Test = () => {
 
     const [dbData, setDbData] = useState(false);
+    const [uniqueUserName, setUniqueUserName] = useState('Teodor');
 
     useEffect(()=>{
-        fetch(`http://127.0.0.1:5000/admins/user/Teodor`, {
+        fetch(`${BASE_URL}/admins/user/${uniqueUserName}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
