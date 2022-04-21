@@ -39,7 +39,7 @@ if (!isDev && cluster.isMaster) {
   app.use(express.json());
 
   // Priority serve any static files.
-  app.use(express.static(path.resolve('../client/build')));
+  app.use(express.static(__dirname, path.resolve('../client/build')));
 
   // Answer API requests.
   // app.get('/api', function (req, res) {
@@ -58,7 +58,7 @@ if (!isDev && cluster.isMaster) {
 
   // All remaining requests return the React app, so it can handle routing.
   app.get('*', function(request, response) {
-    response.sendFile(path.resolve('../client/build', 'index.html'));
+    response.sendFile(path.resolve(__dirname, '../client/build', 'index.html'));
   });
 
   app.listen(PORT, function () {
