@@ -12,7 +12,7 @@
     "build": "cd client/ && npm install && npm run build",
     "eslint": "eslint .",
     "eslint-fix": "eslint . --fix",
-    "start:dev": "nodemon src/index.js",
+    "start:dev": "nodemon ./server/src/index.js",
     "seed": "node src/data/seed.js"
   },
   "cacheDirectories": [

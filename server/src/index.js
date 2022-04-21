@@ -12,12 +12,16 @@ import adminsController from './controllers/admins-controller.js';
 const PORT = process.env.PORT || serverPORT;
 import path from 'path';
 import cluster from 'cluster';
-
 import os from 'os';
 const numCPUs = os.cpus().length;
-
 const isDev = process.env.NODE_ENV !== 'production';
 
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+// D:\my-websites\ttodorov\server\src
 
 // Multi-process to utilize all CPU cores.
 if (!isDev && cluster.isMaster) {
@@ -39,13 +43,7 @@ if (!isDev && cluster.isMaster) {
   app.use(express.json());
 
   // Priority serve any static files.
-  app.use(express.static(__dirname, path.resolve('../client/build')));
-
-  // Answer API requests.
-  // app.get('/api', function (req, res) {
-  //   res.set('Content-Type', 'application/json');
-  //   res.send('{"message":"Hello from Teodor!"}');
-  // });
+  app.use(express.static(path.resolve(__dirname, '../../client/build')));
 
   app.use('/users', usersController);
   app.use('/admins', adminsController);
@@ -58,7 +56,7 @@ if (!isDev && cluster.isMaster) {
 
   // All remaining requests return the React app, so it can handle routing.
   app.get('*', function(request, response) {
-    response.sendFile(path.resolve(__dirname, '../client/build', 'index.html'));
+    response.sendFile(path.resolve(__dirname, '../../client/build', 'index.html'));
   });
 
   app.listen(PORT, function () {
