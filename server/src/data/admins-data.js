@@ -51,7 +51,6 @@ const getUserWithRole = async (uniqueUserName) => {
   try {
     result = await pool.query(sql, [uniqueUserName]);
   } catch (err) {
-    console.log("Error from DB" + JSON.stringify(err));
     return { error: "Something went wrong with getUserWithRole request." };
   }
   return result[0];
