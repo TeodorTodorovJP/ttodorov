@@ -24,6 +24,7 @@ if (process.env.JAWSDB_MARIA_URL) {
     password: "kiu4qzodo6bwp2m3",
     port: "3306",
     database: "kpwjo6ti6ysm389o",
+    connectionLimit: 10,
   };
 } else {
   createPoolWith = DB_CONFIG;
