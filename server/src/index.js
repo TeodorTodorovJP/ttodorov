@@ -22,10 +22,9 @@ import { dirname } from 'path';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 // D:\my-websites\ttodorov\server\src
-console.log("Env *1* " + process.env.NODE_ENV);
+
 // Multi-process to utilize all CPU cores.
 if (!isDev && cluster.isMaster) {
-  console.log("Env *2* " + process.env.NODE_ENV);
   console.error(`Node cluster master ${process.pid} is running`);
 
   // Fork workers.
@@ -39,7 +38,6 @@ if (!isDev && cluster.isMaster) {
     );
   });
 } else {
-  console.log("Env *3* " + process.env.NODE_ENV);
   const app = express();
   app.use(cors());
   app.use(helmet());
