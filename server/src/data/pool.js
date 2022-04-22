@@ -1,6 +1,8 @@
 import { DB_CONFIG } from "../config.js";
 import mariadb from "mariadb";
 
+// Connection String mysql://oshn0n1uh3v3ai0t:kiu4qzodo6bwp2m3@klbcedmmqp7w17ik.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306/kpwjo6ti6ysm389o
+
 let createPoolWith = {};
 if (process.env.JAWSDB_MARIA_URL) {
   createPoolWith = {
