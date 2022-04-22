@@ -10,6 +10,7 @@ const Test = () => {
     useEffect(()=>{
         fetch(`${BASE_URL}/admins/user/${uniqueUserName}`, {
             method: 'GET',
+            mode: 'cors',
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidW5pcXVlVXNlck5hbWUiOiJUZW9kb3JBZG1pbiIsInJvbGUiOiJhZG1pbiIsImlzQmFubmVkIjowLCJpc0RlbGV0ZWQiOjEsImlhdCI6MTY0ODI4OTUxMX0.rbWOzwdi5pvFLvWWDs_rokoKmyfmbmxl2t4QSZkfvRM`,
