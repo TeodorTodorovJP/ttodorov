@@ -11,14 +11,15 @@ import pagePermissionsDecorator from '../middlewares/page-permissions-decorator.
 
 const adminsController = express.Router();
 
-adminsController.use(authMiddleware);
-adminsController.use(banGuard);
-adminsController.use(tokenValidator);
-adminsController.use(roleMiddleware(userRole.admin));
+//adminsController.use(authMiddleware);
+//adminsController.use(banGuard);
+//adminsController.use(tokenValidator);
+//adminsController.use(roleMiddleware(userRole.admin));
 // adminsController.use(pagePermissionsDecorator);
 
 adminsController
   .get('/user/:uniqueUserName', async (req, res) => {
+    console.log("In the correct method");
     const { uniqueUserName } = req.params;
     const { error, user, message } = await adminsService.getUser(adminsData)(uniqueUserName);
     if (error) {

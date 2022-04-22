@@ -41,6 +41,7 @@ const banUser = async (userId, days) => {
 };
 
 const getUserWithRole = async (uniqueUserName) => {
+  console.log("In the correct data");
   const sql = `
   SELECT u.user_id as id, u.unique_user_name as uniqueUserName, r.role_name as role
   FROM users u

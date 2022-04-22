@@ -63,6 +63,7 @@ const banUser = (adminsData) => {
 };
 
 const getUser = (adminsData) => {
+  console.log("In the correct service");
   return async (uniqueUserName) => {
 
     const user = await adminsData.getUserWithRole(uniqueUserName);
