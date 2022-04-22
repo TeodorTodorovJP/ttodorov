@@ -63,9 +63,7 @@ const banUser = (adminsData) => {
 };
 
 const getUser = (adminsData) => {
-  console.log("In the correct service");
   return async (uniqueUserName) => {
-
     const user = await adminsData.getUserWithRole(uniqueUserName);
 
     if (user && user.error) {
@@ -75,7 +73,7 @@ const getUser = (adminsData) => {
       return { message: errorStrings.users.invalidUserId };
     }
 
-    return {user: user};
+    return { user: user };
   };
 };
 

@@ -18,33 +18,38 @@ const adminsController = express.Router();
 // adminsController.use(pagePermissionsDecorator);
 
 adminsController
-  .get('/user/:uniqueUserName', async (req, res) => {
-    console.log("In the correct method");
+  .get("/user/:uniqueUserName", async (req, res) => {
     const { uniqueUserName } = req.params;
-    const { error, user, message } = await adminsService.getUser(adminsData)(uniqueUserName);
+    const { error, user, message } = await adminsService.getUser(adminsData)(
+      uniqueUserName
+    );
     if (error) {
       res.status(400).send({ error });
     } else if (message) {
-      res.status(404).send({message});
+      res.status(404).send({ message });
     } else {
       res.status(200).send(user);
     }
   })
-  .delete('/user', async (req, res) => {
+  .delete("/user", async (req, res) => {
     const { id } = req.body;
 
     const result = await adminsService.deleteUser(adminsData)(id);
 
     res.send(result);
   })
-  .post('/ban', bodyValidator('admins', banUserScheme, 'ban'), async (req, res) => {
-    const { id, days } = req.body;
+  .post(
+    "/ban",
+    bodyValidator("admins", banUserScheme, "ban"),
+    async (req, res) => {
+      const { id, days } = req.body;
 
-    const result = await adminsService.banUser(adminsData)(id, days);
+      const result = await adminsService.banUser(adminsData)(id, days);
 
-    res.send(result);
-  })
-  .delete('/activate/user', async (req, res) => {
+      res.send(result);
+    }
+  )
+  .delete("/activate/user", async (req, res) => {
     const { uniqueUserName } = req.body;
 
     const result = await adminsService.activateUser(adminsData)(uniqueUserName);
@@ -58,14 +63,17 @@ adminsController
     }
   })
 
-  .post('/page/permissions/add', async (req, res) => {
+  .post("/page/permissions/add", async (req, res) => {
     // {
     //   "pageName": "utils", // has to be snake case
     //   "permissions": ""
     // }
     const { pageName, permissions } = req.body;
 
-    const result = await adminsService.addPermissionsForPage(adminsData)(pageName, permissions);
+    const result = await adminsService.addPermissionsForPage(adminsData)(
+      pageName,
+      permissions
+    );
 
     if (result.error) {
       res.status(400).send(result.error);
@@ -76,14 +84,16 @@ adminsController
     }
   })
 
-  .get('/page/permissions', async (req, res) => {
+  .get("/page/permissions", async (req, res) => {
     // {
     //   "pageName": "utils", // has to be snake case
     //   "permissions": ""
     // }
     const { pageName, updatePermissions, permissions } = req.body;
 
-    const result = await adminsService.updatePermissionsForPageForUsers(adminsData)(pageName, updatePermissions, permissions); 
+    const result = await adminsService.updatePermissionsForPageForUsers(
+      adminsData
+    )(pageName, updatePermissions, permissions);
 
     if (result.error) {
       res.status(400).send(result.error);
@@ -94,14 +104,16 @@ adminsController
     }
   })
 
-  .post('/page/permissions/update', async (req, res) => {
+  .post("/page/permissions/update", async (req, res) => {
     // {
     //   "pageName": "utils", // has to be snake case
     //   "permissions": ""
     // }
     const { pageName, updatePermissions, permissions } = req.body;
 
-    const result = await adminsService.updatePermissionsForPageForUsers(adminsData)(pageName, updatePermissions, permissions); 
+    const result = await adminsService.updatePermissionsForPageForUsers(
+      adminsData
+    )(pageName, updatePermissions, permissions);
 
     if (result.error) {
       res.status(400).send(result.error);
@@ -110,7 +122,7 @@ adminsController
     } else {
       res.status(200).send(result);
     }
-  })
+  });
   
 
 export default adminsController;

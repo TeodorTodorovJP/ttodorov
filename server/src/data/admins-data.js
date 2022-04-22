@@ -41,7 +41,6 @@ const banUser = async (userId, days) => {
 };
 
 const getUserWithRole = async (uniqueUserName) => {
-  console.log("In the correct data");
   const sql = `
   SELECT u.user_id as id, u.unique_user_name as uniqueUserName, r.role_name as role
   FROM users u
@@ -52,7 +51,8 @@ const getUserWithRole = async (uniqueUserName) => {
   try {
     result = await pool.query(sql, [uniqueUserName]);
   } catch (err) {
-    return { error: 'Something went wrong with getUserWithRole request.' };
+    console.log(JSON.stringify(err));
+    return { error: "Something went wrong with getUserWithRole request." };
   }
   return result[0];
 };
