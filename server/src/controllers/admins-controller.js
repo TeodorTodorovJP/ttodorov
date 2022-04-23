@@ -23,12 +23,13 @@ adminsController
     const { error, user, message } = await adminsService.getUser(adminsData)(
       uniqueUserName
     );
+    const roles = await adminsData.getAllRolesProcedure();
     if (error) {
       res.status(400).send({ error });
     } else if (message) {
       res.status(404).send({ message });
     } else {
-      res.status(200).send(user);
+      res.status(200).send({ user: user, roles: roles });
     }
   })
   .delete("/user", async (req, res) => {

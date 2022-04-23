@@ -193,6 +193,18 @@ const getAllUsersIds = async () => {
 // CALL add_new_permissions_for_page('todo', 'test5,test6'); -- add new permissions 1 or more -- DONE
 // CALL update_permissions_for_page_for_users('admin_panel', '*', '', 1, 'view,add_user,get_user,delete_user,ban_user,activate_user,view_pages', '1,1,1,1,1,1,1'); -- Update DONE
 
+const getAllRolesProcedure = async () => {
+  let sql = "call get_roles();";
+
+  let result = [];
+  try {
+    result = await pool.query(sql);
+  } catch (err) {
+    return { error: "Something went wrong with getAllRolesProcedure request." };
+  }
+  return result[0];
+};
+
 export default {
   deleteUser,
   activateUser,
@@ -207,5 +219,6 @@ export default {
   getPagePermissionsForOnePage,
   updatePermissionsForPageForUsers,
   getAllRolesIds,
-  getAllUsersIds
+  getAllUsersIds,
+  getAllRolesProcedure,
 };
