@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
-import './Test.css';
+import { useEffect, useState } from "react";
+import "./Second.css";
 import { BASE_URL, FILE_URL } from "../../common/constants.js";
 
-const Test = () => {
+const Second = () => {
   const [dbData, setDbData] = useState({});
   const [uniqueUserName, setUniqueUserName] = useState("Teodor");
   const [loading, setLoading] = useState(false);
@@ -35,6 +35,7 @@ const Test = () => {
     return (
       <>
         <p>{dbData.user.uniqueUserName}</p>
+        <p>Second</p>
         {dbData.roles.map((role, index) => {
           return <p key={index}>{role.role_name}</p>;
         })}
@@ -43,4 +44,4 @@ const Test = () => {
   }
 };
 
-export default Test;
+export default Second;
