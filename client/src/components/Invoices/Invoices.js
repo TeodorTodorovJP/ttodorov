@@ -15,7 +15,7 @@ export default function Invoices() {
   }
 
   return (
-    <div style={{ display: "flex" }}>
+    <div className="invoices">
       <nav
         style={{
           borderRight: "solid 1px",
@@ -44,7 +44,7 @@ export default function Invoices() {
             <QueryNavLink
               style={({ isActive }) => ({
                 display: "block",
-                margin: "1rem 0",
+                marginLeft: "50%",
                 color: isActive ? "red" : "",
               })}
               to={`/invoices/${invoice.number}`}

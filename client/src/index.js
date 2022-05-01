@@ -2,11 +2,11 @@ import React from 'react';
 // import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-import reportWebVitals from './reportWebVitals';
+// import reportWebVitals from './reportWebVitals';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Register from "./components/Register/Register";
-import Second from "./components/Second/Second";
+// import Second from "./components/Second/Second";
 import Invoices from "./components/Invoices/Invoices.js";
 import Invoice from "./components/Invoices/Invoice.js";
 
@@ -18,27 +18,27 @@ root.render(
       <Routes>
         <Route path="/" element={<App />}>
           <Route path="register" element={<Register isLoggedIn={"Y"} />} />
-          <Route path="second" element={<Second />} />
-        </Route>
-        <Route path="invoices" element={<Invoices />}>
+
+          <Route path="invoices" element={<Invoices />}>
+            <Route
+              index
+              element={
+                <main style={{ padding: "1rem" }}>
+                  <p>Select an invoice</p>
+                </main>
+              }
+            />
+            <Route path=":invoiceId" element={<Invoice />} />
+          </Route>
           <Route
-            index
+            path="*"
             element={
-              <main style={{ padding: "1rem" }}>
-                <p>Select an invoice</p>
+              <main style={{ padding: "1rem", color: "white" }}>
+                <p>There's nothing here!</p>
               </main>
             }
           />
-          <Route path=":invoiceId" element={<Invoice />} />
         </Route>
-        <Route
-          path="*"
-          element={
-            <main style={{ padding: "1rem" }}>
-              <p>There's nothing here!</p>
-            </main>
-          }
-        />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>
