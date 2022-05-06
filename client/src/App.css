@@ -1,98 +1,39 @@
-
-
 .App {
-  /* text-align: center;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
-  overflow: hidden;
+  text-align: center;
+}
 
-  background-position: center;
-  position: fixed;
-  min-width: 100%;
-  min-height: 100%;
-  color: white; */
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
 
-  --accent-color: black;
-  --background-color: white;
-  --text-color: black;
-  --button-color: white;
-  --button-text-color: var(--background-color);
-  --transition-delay: 1s;
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-float infinite 3s ease-in-out;
+  }
+}
 
+.App-header {
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-
-  height: 100vh;
-  margin: 0;
-
-  background-color: var(--background-color);
-  color: var(--text-color);
-
-  transition: var(--transition-delay);
-
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
 }
 
-.App .navigation {
-  height: 100%; /* 100% Full-height */
-  position: fixed; /* Stay in place */
-  top: 0; /* Stay at the top */
-  left: 0;
-
-  overflow-x: hidden; /* Disable horizontal scroll */
-  transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
+.App-link {
+  color: rgb(112, 76, 182);
 }
 
-
-.App-dark {
-
-  --accent-color: #D0D066;
-  --background-color: #333;
-  --text-color: var(--text-color);
-  --button-color: white;
-  --button-text-color: black;
-
-
-
-  text-align: left;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
-  overflow: hidden;
-
-  background-position: center;
-  position: fixed;
-  min-width: 100%;
-  min-height: 100%;
-  color: white;
-}
-
-
-
-.App-eye {
-
-  --accent-color: #D0D066;
-  --background-color: rgb(148, 69, 69);
-  --text-color: var(--text-color);
-  --button-color: rgb(163, 18, 18);
-  --button-text-color: black;
-
-
-
-  text-align: left;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
-  overflow: hidden;
-
-  background-position: center;
-  position: fixed;
-  min-width: 100%;
-  min-height: 100%;
-  color: white;
+@keyframes App-logo-float {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
 }
