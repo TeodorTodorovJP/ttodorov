@@ -1,22 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
-import { useAppSelector, useAppDispatch } from '../../app/hooks';
+import { useAppSelector, useAppDispatch } from "../../app/hooks";
 import {
   decrement,
   increment,
   incrementByAmount,
-  incrementAsync,
+  // incrementAsync,
   incrementIfOdd,
   selectCount,
-} from './counterSlice';
-import styles from './Counter.module.css';
+} from "./counterSlice";
+import styles from "./Counter.module.css";
+import { useGetSignTokenMutation } from "./counterAPI";
 
 export function Counter() {
   const count = useAppSelector(selectCount);
   const dispatch = useAppDispatch();
-  const [incrementAmount, setIncrementAmount] = useState('2');
+  const [incrementAmount, setIncrementAmount] = useState("2");
 
   const incrementValue = Number(incrementAmount) || 0;
+  const [getToken, { data, error, isLoading }] = useGetSignTokenMutation();
+
+  const getTokenFn = async () => {
+      try {
+        await getToken({
+          uniqueUserName: "TeodorAdmin",
+          password: "myPass23*",
+        }).unwrap()
+      } catch (error) {
+        console.log(error)
+      }
+  }
 
   return (
     <div>
@@ -37,6 +50,16 @@ export function Counter() {
           +
         </button>
       </div>
+      <div>
+        <p>Fetched Token by RTK {data ? data.token : 'waiting'}</p>
+        <button
+          className={styles.button}
+          aria-label="Increment value"
+          onClick={() => getTokenFn()}
+        >
+          Fetch
+        </button>
+      </div>
       <div className={styles.row}>
         <input
           className={styles.textbox}
@@ -52,7 +75,13 @@ export function Counter() {
         </button>
         <button
           className={styles.asyncButton}
-          onClick={() => dispatch(incrementAsync(incrementValue))}
+          // onClick={() => dispatch(incrementAsync(incrementValue)).unwrap()
+          //   .then((originalPromiseResult) => {
+          //     // handle result here
+          //   })
+          //   .catch((rejectedValueOrSerializedError) => {
+          //     console.log(rejectedValueOrSerializedError)
+          //   })}
         >
           Add Async
         </button>
