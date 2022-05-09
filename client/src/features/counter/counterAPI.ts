@@ -1,8 +1,10 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
+const PORT = process.env.PORT || 'http://127.0.0.1:5000/';
+
 export const serverApi = createApi({
   reducerPath: 'serverApi',
-  baseQuery: fetchBaseQuery({ baseUrl: 'http://127.0.0.1:5000/' }),
+  baseQuery: fetchBaseQuery({ baseUrl: PORT }),
   endpoints: (builder) => ({
     getSignToken: builder.mutation({
       query: (forToken) => ({
