@@ -41,6 +41,21 @@ app.use(function (req, res, next) {
 
 app.use(cors());
 app.use(helmet());
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: ["'self'"],
+      connectSrc: ["'self'", PORT],
+      frameSrc: ["'self'"],
+      childSrc: ["'self'"],
+      scriptSrc: ["'self'"],
+      styleSrc: ["'self'"],
+      fontSrc: ["'self'"],
+      imgSrc: ["'self'"],
+      baseUri: ["'self'"],
+    },
+  })
+);
 app.use(express.json());
 
 // Priority serve any static files.
