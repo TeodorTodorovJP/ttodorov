@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
 const PORT = process.env.PORT || 'http://127.0.0.1:5000/';
+console.log("Port " + process.env.PORT)
 
 export const serverApi = createApi({
   reducerPath: 'serverApi',
