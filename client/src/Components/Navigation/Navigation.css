@@ -1,0 +1,130 @@
+.Navigation {
+
+    height: fit-content;
+    width: fit-content;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    flex-direction: column;
+
+    text-align: center;
+  }
+  
+
+ .nav-tag {
+    border: solid 1px;
+    padding: 1rem;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 1rem;
+    gap: 3rem;
+  }
+
+
+  .theme-wrapper{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    border: solid 1px;
+  }
+  
+  .theme-menu {
+    height: fit-content;
+    width: fit-content;
+
+    display: flex;
+    /* justify-content: center; */
+    /* align-items: center; */
+
+
+
+    position: fixed;
+    /* z-index: 1; */
+
+    transition: var(--transition-delay);
+    transform: scale(1); 
+  } 
+
+  .theme-btn {
+    background-color: var(--button-color);
+    color: var(--text-color);
+    cursor: pointer;
+    margin-top: 3rem;
+    padding: 1rem;
+    border-radius: .3rem;
+    border: none;
+    outline: none;
+
+    transition: var(--transition-delay);
+    transform: scale(1);
+
+  }
+
+  .sun-moon {
+    fill: black;
+    stroke: transparent;
+    stroke-width: 0px;
+  }
+
+  .theme-btn:hover,
+  .theme-btn:focus {
+    transform: scale(1.1);
+  }
+
+  .theme-menu-opts-hide{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    opacity: 0;
+    transition: var(--transition-delay);
+    transform: scale(1);
+  }
+  .theme-menu-opts-show{
+    display: flex;
+    justify-content: center;
+    align-items:flex-end;
+
+    opacity: 1;
+    transition: var(--transition-delay);
+    transform: scale(1);
+  }
+
+  .theme-opt {
+    cursor: pointer;
+    padding: 0.6em;
+    border-radius: .3em;
+    border: none;
+    outline: none;
+
+    transition: var(--transition-delay);
+    transform: scale(1);
+  }
+
+
+  .sun {
+      fill: black;
+  }
+
+  .moon {
+    fill: black;
+  }
+
+  .sunset {
+    fill: black;
+  }
+
+  .links {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    flex-direction: column;
+    /* margin-top: 4rem; */
+  }

@@ -1,7 +1,7 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/query';
-import counterReducer from '../features/counter/counterSlice';
-import { serverApi } from '../features/counter/counterAPI';
+import counterReducer from '../Components/counter/counterSlice';
+import { serverApi } from '../Components/counter/counterAPI';
 export const store = configureStore({
   reducer: {
     [serverApi.reducerPath]: serverApi.reducer,
