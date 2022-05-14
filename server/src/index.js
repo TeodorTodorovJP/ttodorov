@@ -12,6 +12,7 @@ import { fileURLToPath } from "url";
 import { dirname } from "path";
 
 const PORT = process.env.PORT || serverPORT;
+const herokuURL = "https://ttodorov.herokuapp.com";
 const isDev = process.env.NODE_ENV !== "production";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -20,9 +21,8 @@ const app = express();
 
 // Add headers before the routes are defined
 app.use(function (req, res, next) {
-
   // Website you wish to allow to connect
-  res.setHeader('Access-Control-Allow-Origin', PORT);
+  res.setHeader("Access-Control-Allow-Origin", PORT);
 
   // Request methods you wish to allow
   // res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
@@ -38,14 +38,13 @@ app.use(function (req, res, next) {
   next();
 });
 
-
 app.use(cors());
 app.use(helmet());
 app.use(
   helmet.contentSecurityPolicy({
     directives: {
       defaultSrc: ["'self'"],
-      connectSrc: ["'self'", PORT],
+      connectSrc: ["'self'", herokuURL],
       frameSrc: ["'self'"],
       childSrc: ["'self'"],
       scriptSrc: ["'self'"],
