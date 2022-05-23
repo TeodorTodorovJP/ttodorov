@@ -10,24 +10,23 @@ import { useState, useContext } from "react";
 import Navigation from "./Components/Navigation/Navigation";
 import { Outlet } from "react-router-dom";
 import { themes } from "./constants/constants";
+import { useAppSelector, useAppDispatch } from "./app/hooks";
+
+import { selectState } from "./Components/Navigation/navigationSlice";
 
 function App() {
-  const [authValue, setAuthValue] = useState({
-    isLoggedIn: !!extractUser(getToken()),
-    user: extractUser(getToken()),
-  });
+  // const [authValue, setAuthValue] = useState({
+  //   isLoggedIn: !!extractUser(getToken()),
+  //   user: extractUser(getToken()),
+  // });
+  // const { isLoggedIn, setLoginState } = useContext(AuthContext);
 
-  const [theme, setTheme] = useState(themes.darkTheme);
+  const { theme } = useAppSelector(selectState);
 
-  const appThemeToggle = (theme: string) => {
-    setTheme(theme);
-  };
-
-  const { isLoggedIn, setLoginState } = useContext(AuthContext);
   return (
     <div className={"App " + theme}>
       <div className="navigation">
-        <Navigation appThemeToggle={appThemeToggle} />
+        <Navigation />
       </div>
       <div className="web-body">
         <Outlet />

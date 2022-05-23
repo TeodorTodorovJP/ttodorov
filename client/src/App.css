@@ -55,7 +55,7 @@
 }
 
 
-.App-dark {
+.darkTheme {
 
   --accent-color: #D0D066;
   --background-color: #333;
@@ -81,7 +81,7 @@
 
 
 
-.App-eye {
+.sunSetTheme {
 
   --accent-color: #D0D066;
   --background-color: rgb(148, 69, 69);

@@ -17,9 +17,9 @@ const Register = () => {
     password: false,
   });
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    console.log("clik");
+  // const handleSubmit = (event) => {
+  //   event.preventDefault();
+  //   console.log("clik");
     // setLoading(true);
 
     // fetch(`/users`, {
@@ -37,7 +37,7 @@ const Register = () => {
     //   })
     //   .catch((err) => setError(err.message))
     //   .finally(() => setLoading(false));
-  };
+  // };
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;

@@ -11,6 +11,9 @@
     text-align: center;
   }
   
+  .navToggleButton {
+    z-index: 1;
+  }
 
  .nav-tag {
     border: solid 1px;
@@ -42,7 +45,7 @@
     /* justify-content: center; */
     /* align-items: center; */
 
-
+    align-items: baseline;
 
     position: fixed;
     /* z-index: 1; */
@@ -94,6 +97,8 @@
     opacity: 1;
     transition: var(--transition-delay);
     transform: scale(1);
+
+    height: fit-content;
   }
 
   .theme-opt {

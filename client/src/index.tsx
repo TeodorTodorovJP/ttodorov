@@ -8,6 +8,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Register from './Components/Register/Register';
 import Invoices from './Components/Invoices/Invoices';
 import Invoice from './Components/Invoices/Invoice';
+import StoreData from "./Components/StoreData/StoreData";
 
 
 
@@ -33,6 +34,7 @@ root.render(
               />
               <Route path=":invoiceId" element={<Invoice />} />
             </Route>
+            <Route path="storeData" element={<StoreData />} />
             <Route
               path="*"
               element={

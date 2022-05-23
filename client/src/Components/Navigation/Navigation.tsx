@@ -10,64 +10,62 @@ import { ReactComponent as SunMoon } from "../../Images/SVG/sun-moon.svg";
 import { ReactComponent as Sun } from "../../Images/SVG/sun.svg";
 import { ReactComponent as Moon } from "../../Images/SVG/moon.svg";
 import { ReactComponent as Sunset } from "../../Images/SVG/sunset.svg";
-import { themes } from "../../constants/constants";
+import { themes, Themes } from "../../constants/constants";
 
-function Navigation({ appThemeToggle }) {
+import { useAppSelector, useAppDispatch } from "../../app/hooks";
+import {
+  selectState,
+  changeTheme,
+  toggleMenu,
+  toggleThemeMenu,
+} from "./navigationSlice";
+
+export default function Navigation() {
   const [authValue, setAuthValue] = useState({
     isLoggedIn: !!extractUser(getToken()),
     user: extractUser(getToken()),
   });
 
-  const { isLoggedIn, setLoginState } = useContext(AuthContext);
+  const { menuState, themeMenuState, theme, themeMenuOpts } =
+    useAppSelector(selectState);
 
-  const [navMenu, setNavMenu] = useState(true);
-  const [themeMenu, setThemeMenu] = useState(true);
-  const [themeMenuOpts, setThemeMenuOpts] = useState("theme-menu-opts-show");
-
-  const toggleMenu = () => {
-    setNavMenu(!navMenu);
-  };
-
-  const toggleThemeMenu = () => {
-    setThemeMenu(!themeMenu);
-    // setThemeMenuOpts(
-    //   themeMenuOpts === "theme-menu-opts-hide"
-    //     ? "theme-menu-opts-show"
-    //     : "theme-menu-opts-hide"
-    // );
-  };
-
-  const toggleTheme = (theme) => {
-    appThemeToggle(theme);
-  };
+  const dispatch = useAppDispatch();
 
   return (
     <div className="Navigation">
-      <button onClick={() => toggleMenu()}>open</button>
-      {navMenu ? (
+      <button
+        className="navToggleButton"
+        onClick={() => dispatch(toggleMenu())}
+      >
+        open
+      </button>
+      {menuState ? (
         <nav className="nav-tag">
           <div className="theme-wrapper">
             <div className="theme-menu">
-              <button className="theme-btn" onClick={() => toggleThemeMenu()}>
+              <button
+                className="theme-btn"
+                onClick={() => dispatch(toggleThemeMenu())}
+              >
                 <SunMoon />
               </button>
-              {themeMenu ? (
+              {themeMenuState ? (
                 <div className={themeMenuOpts}>
                   <button
                     className="theme-opt"
-                    onClick={() => toggleTheme(themes.lightTheme)}
+                    onClick={() => dispatch(changeTheme(themes.lightTheme))}
                   >
                     <Sun />
                   </button>
                   <button
                     className="theme-opt"
-                    onClick={() => toggleTheme(themes.darkTheme)}
+                    onClick={() => dispatch(changeTheme(themes.darkTheme))}
                   >
                     <Moon />
                   </button>
                   <button
                     className="theme-opt"
-                    onClick={() => toggleTheme(themes.eyeTheme)}
+                    onClick={() => dispatch(changeTheme(themes.sunSetTheme))}
                   >
                     <Sunset />
                   </button>
@@ -77,12 +75,11 @@ function Navigation({ appThemeToggle }) {
           </div>
           <div className="links">
             <Link to="/register">Register</Link>
-            <Link to="/invoices">invoices</Link>
+            <Link to="/invoices">Invoices</Link>
+            <Link to="/storeData">Store Data</Link>
           </div>
         </nav>
       ) : null}
     </div>
   );
 }
-
-export default Navigation;
