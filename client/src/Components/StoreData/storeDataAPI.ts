@@ -2,11 +2,11 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { herokuURL } from "../../constants/constants";
 
 const isProd = process.env.NODE_ENV === "production";
-const PORT = isProd ? herokuURL : "http://127.0.0.1:5000";
+const PORT = isProd ? herokuURL : "http://127.0.0.1:5000/";
 
 export const storeDataAPI = createApi({
   reducerPath: "storeDataAPI",
-  baseQuery: fetchBaseQuery({ baseUrl: `${PORT}/users` }),
+  baseQuery: fetchBaseQuery({ baseUrl: `${PORT}users` }),
   endpoints: (builder) => ({
     storeData: builder.mutation({
       query: ({ type, data }) => ({
