@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-// import { herokuURL } from "../../constants/constants";
+import { herokuURL } from "../../constants/constants";
 
-const PORT = process.env.PORT || "http://127.0.0.1:5000";
+const PORT = process.env.PORT ? herokuURL : "http://127.0.0.1:5000";
 
 export const storeDataAPI = createApi({
   reducerPath: "storeDataAPI",
