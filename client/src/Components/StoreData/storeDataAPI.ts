@@ -1,22 +1,26 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { herokuURL } from "../../constants/constants";
+// import { herokuURL } from "../../constants/constants";
+
+const PORT = process.env.PORT || "http://127.0.0.1:5000";
 
 export const storeDataAPI = createApi({
   reducerPath: "storeDataAPI",
-  baseQuery: fetchBaseQuery({ baseUrl: herokuURL }),
+  baseQuery: fetchBaseQuery({ baseUrl: `${PORT}/users` }),
   endpoints: (builder) => ({
     storeData: builder.mutation({
-      query: (forToken) => ({
-        url: `storeData/post`,
+      query: ({ type, data }) => ({
+        url: `storeData`,
         method: "POST",
-        body: forToken,
+        body: { type: type, description: data },
       }),
     }),
-    getData: builder.mutation({
-      query: (forToken) => ({
-        url: `storeData/get`,
+    getData: builder.query({
+      query: (opt) => ({
+        url: `getData`,
         method: "GET",
-        body: forToken,
+        headers: {
+          "Content-Type": "application/json; charset=UTF-8",
+        },
       }),
     }),
   }),
@@ -24,7 +28,7 @@ export const storeDataAPI = createApi({
 
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
-export const { useStoreDataMutation, useGetDataMutation } = storeDataAPI;
+export const { useStoreDataMutation, useGetDataQuery } = storeDataAPI;
 
 // return fetch(`/admins/user/Teodor`, {
 //   method: "GET",

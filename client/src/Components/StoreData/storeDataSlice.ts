@@ -6,12 +6,12 @@ import * as constants from "../../constants/constants";
 
 export interface StoreDataState {
   inputDescription: string;
-  inputValue: string;
+  inputType: string;
 }
 
 const initialState: StoreDataState = {
   inputDescription: "",
-  inputValue: "",
+  inputType: "",
 };
 
 export const storeDataSlice = createSlice({
@@ -29,12 +29,13 @@ export const storeDataSlice = createSlice({
     },
     updateCurrentData: (state, action) => {
       //state.theme = action.payload;
-      const { type, data } = action.payload;
+      const { type, value } = action.payload;
+
       if (type === "type") {
-        state.inputValue = type;
+        state.inputType = value;
       }
       if (type === "data") {
-        state.inputDescription = type;
+        state.inputDescription = value;
       }
     },
   },

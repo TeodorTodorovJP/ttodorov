@@ -1,0 +1,58 @@
+
+
+.StoreData {
+    margin: 0px;
+    padding: 0px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    position: fixed;
+
+    top: 5%;
+    left: 50%;
+
+}
+
+.StoreData > form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    
+}
+
+.StoreData table {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    
+}
+
+.StoreData table, th, td {
+    border: 1px solid black;
+    border-radius: 10px;
+  }
+
+  td {
+    padding: 0 25px;
+  }
+
+
+.submitBtn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    margin-top: 10px;
+    margin-bottom: 10px;
+    color: red;
+}
+
+
+.showBtn{
+    margin-bottom: 10px;
+}

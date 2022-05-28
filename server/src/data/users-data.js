@@ -253,6 +253,35 @@ const resign = async (userId) => {
 };
 
 
+const storeData = async (type, description) => {
+  const sql = `
+    INSERT INTO store_data (type, description) VALUES (?, ?)
+    `;
+  let result = {};
+  try {
+    result = await pool.query(sql, [type, description]);
+  } catch (err) {
+    return { error: "Something went wrong with storeData request." };
+  }
+
+  return result;
+};
+
+const getData = async () => {
+  const sql = `
+    SELECT * FROM store_data
+    `;
+  let result = {};
+
+  try {
+    result = await pool.query(sql);
+  } catch (err) {
+    return { error: "Something went wrong with getData request." };
+  }
+
+  return result;
+};
+
 export default {
   createUser,
   getUserAndRole,
@@ -264,5 +293,7 @@ export default {
   updateAvatar,
   getStatusById,
   createMyUser,
-  resign
+  resign,
+  storeData,
+  getData,
 };

@@ -3,22 +3,59 @@ import { Outlet } from "react-router-dom";
 
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
 import { selectState, updateCurrentData } from "./storeDataSlice";
-import { useStoreDataMutation } from "./storeDataAPI";
+import { useStoreDataMutation, useGetDataQuery } from "./storeDataAPI";
+import { useEffect, useState } from "react";
 
 export default function StoreData() {
-  const { inputValue, inputDescription } = useAppSelector(selectState);
+  const { inputType, inputDescription } = useAppSelector(selectState);
   const dispatch = useAppDispatch();
 
-  const [storeData, { data, error, isLoading }] = useStoreDataMutation();
+  const [submitError, setSubmitError] = useState(false);
 
-  const storeDataFn = async (type: string, data: string) => {
+  const [storeData] = useStoreDataMutation();
+
+  const [queryTrigger, setQueryTrigger] = useState(1);
+  const { data: dbData } = useGetDataQuery(queryTrigger);
+
+  const [showDbData, setShowDbData] = useState(false);
+  const showData = () => {
+    setShowDbData(!showDbData);
+  };
+  // useEffect(() => {
+  //   fetch(`http://127.0.0.1:5000/users/getData`, {
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //       Accept: "application/json",
+  //     },
+  //   })
+  //     .then((res) => res.json())
+  //     .then((res) => {
+  //       console.log(res);
+  //       console.log("Called from fetch");
+  //       return res;
+  //     });
+  // }, []);
+
+  const storeDataFn = async (
+    e: React.FormEvent<HTMLFormElement>,
+    type: string,
+    data: string
+  ) => {
+    e.preventDefault();
+    if (type === "" || data === "") {
+      console.log("Enter some data");
+      setSubmitError(!submitError);
+      return;
+    }
     try {
       await storeData({
-        uniqueUserName: "TeodorAdmin",
-        password: "myPass23*",
         type: type,
         data: data,
       }).unwrap();
+
+      //dispatch(updateCurrentData({ type: "type", value: "" }));
+      //dispatch(updateCurrentData({ type: "data", value: "" }));
+      setQueryTrigger(queryTrigger + 1);
     } catch (error) {
       console.log(error);
     }
@@ -26,10 +63,7 @@ export default function StoreData() {
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-    if (name === "type")
-      dispatch(updateCurrentData({ type: "type", value: inputValue }));
-    if (name === "data")
-      dispatch(updateCurrentData({ type: "data", value: inputDescription }));
+    dispatch(updateCurrentData({ type: name, value: value }));
   };
 
   return (
@@ -37,25 +71,55 @@ export default function StoreData() {
       <div className="StoreData">
         <h1>Insert Data</h1>
         <span className="close-btn"></span>
-        <form onSubmit={() => storeDataFn(inputValue, inputDescription)}>
+        <form onSubmit={(e) => storeDataFn(e, inputType, inputDescription)}>
           <div>
             <input
-              onChange={handleInputChange}
+              onChange={(e) => handleInputChange(e)}
               name="type"
               defaultValue="Type of data"
+              value={inputType}
             />
           </div>
           <div>
             <input
-              onChange={handleInputChange}
+              onChange={(e) => handleInputChange(e)}
               name="data"
-              defaultValue="Your data"
+              defaultValue="Data"
+              value={inputDescription}
             />
           </div>
-          <div>
-            <button type="submit">Submit Data</button>
+          <div className="submitBtn">
+            {submitError ? <p>Enter data in both fields</p> : null}
+            <button type="submit" name="submit">
+              Submit Data
+            </button>
           </div>
         </form>
+        <button type="button" className="showBtn" onClick={() => showData()}>
+          Show data
+        </button>
+        {showDbData ? (
+          dbData.length !== 0 ? (
+            <table>
+              <thead>
+                <tr>
+                  <th>Type</th>
+                  <th>Data</th>
+                </tr>
+              </thead>
+              <tbody>
+                {dbData.map((x: any, index: number) => (
+                  <tr key={index + x.idstore_data}>
+                    <td>{x.type}</td>
+                    <td>{x.description}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <p>No data</p>
+          )
+        ) : null}
       </div>
       <Outlet />
     </>

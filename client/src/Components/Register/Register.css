@@ -82,6 +82,7 @@ html, body {
   
   /* Inputs */
   a,
+  textarea,
   input{
     font-family: 'Open Sans Condensed', sans-serif;
     text-decoration: none;
