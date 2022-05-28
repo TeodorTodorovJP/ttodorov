@@ -98,7 +98,7 @@ export default function StoreData() {
         <button type="button" className="showBtn" onClick={() => showData()}>
           Show data
         </button>
-        {showDbData ? (
+        {showDbData && dbData ? (
           dbData.length !== 0 ? (
             <table>
               <thead>
